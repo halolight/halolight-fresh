@@ -25,8 +25,8 @@ function success<T>(data: T): ApiResponse<T> {
   return { code: 200, message: "success", data };
 }
 
-function error(message: string, code = 400): ApiResponse<null> {
-  return { code, message, data: null };
+function error<T = null>(message: string, code = 400): ApiResponse<T> {
+  return { code, message, data: null as T };
 }
 
 // ==================== 认证 API ====================

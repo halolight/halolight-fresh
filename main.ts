@@ -1,19 +1,22 @@
 import { App } from "@fresh/core";
-import { path, ProdBuildCache, setBuildCache } from "fresh/internal";
-import { fromFileUrl, join } from "$std/path/mod.ts";
+import { ProdBuildCache, setBuildCache } from "fresh/internal";
+import { dirname, fromFileUrl, join } from "$std/path/mod.ts";
 
-export const app = new App({ root: import.meta.url });
+export const app = new App();
 
 // Always register filesystem routes; build cache (when present) will provide route data.
 app.fsRoutes();
 
 // In production runs, attach the build snapshot if it exists.
 const snapshotUrl = new URL("./_fresh/snapshot.js", import.meta.url);
-let snapshot: { staticFiles: Map<string, { filePath: string; contentType: string }> } | null = null;
+// deno-lint-ignore no-explicit-any
+let snapshot: any = null;
 try {
   snapshot = await import(snapshotUrl.href);
-  const root = path.join(import.meta.dirname, ".");
-  setBuildCache(app, new ProdBuildCache(root, snapshot), "production");
+  const root = dirname(fromFileUrl(import.meta.url));
+  if (snapshot) {
+    setBuildCache(app, new ProdBuildCache(root, snapshot), "production");
+  }
 } catch {
   snapshot = null;
 }

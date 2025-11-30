@@ -1,7 +1,10 @@
 import type { ComponentChildren, JSX } from "preact";
 import { cn } from "@/lib/utils.ts";
 
-interface InputProps extends JSX.HTMLAttributes<HTMLInputElement> {
+// deno-lint-ignore no-explicit-any
+type InputAttributes = JSX.HTMLAttributes<HTMLInputElement> & Record<string, any>;
+
+interface InputProps extends InputAttributes {
   label?: string;
   error?: string;
   icon?: ComponentChildren;
@@ -69,6 +72,8 @@ interface ButtonProps extends JSX.HTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   icon?: ComponentChildren;
   iconPosition?: "left" | "right";
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 export function Button({
@@ -146,8 +151,10 @@ export function Button({
   );
 }
 
-interface CheckboxProps extends Omit<JSX.HTMLAttributes<HTMLInputElement>, "type"> {
-  label?: string;
+interface CheckboxProps extends Omit<JSX.HTMLAttributes<HTMLInputElement>, "type" | "label"> {
+  label?: string | ComponentChildren;
+  checked?: boolean;
+  onChange?: (e: Event) => void;
 }
 
 export function Checkbox({ label, class: className, id, ...props }: CheckboxProps) {

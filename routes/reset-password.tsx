@@ -1,8 +1,8 @@
-import { define } from "@/utils.ts";
+import { define, PageProps } from "@/utils.ts";
 import ResetPasswordForm from "@/islands/ResetPasswordForm.tsx";
 import { APP_CONFIG } from "@/lib/config.ts";
 
-export default define.page(function ResetPasswordPage(props) {
+export default define.page(function ResetPasswordPage(props: PageProps) {
   // 从 URL 获取 token
   const url = new URL(props.url);
   const token = url.searchParams.get("token") || "";

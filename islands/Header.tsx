@@ -83,7 +83,7 @@ export default function Header({ title }: HeaderProps) {
             }}
             class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            {isDarkMode.value ? <Moon class="h-5 w-5" /> : <Sun class="h-5 w-5" />}
+            {isDarkMode() ? <Moon class="h-5 w-5" /> : <Sun class="h-5 w-5" />}
           </button>
 
           {showThemeMenu.value && (
