@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import type { DashboardWidget, Permission, ThemeMode, User } from "./types.ts";
+import type { DashboardWidget, Permission, SkinType, ThemeMode, User } from "./types.ts";
 import {
   AUTH_CONFIG,
   DEFAULT_LAYOUTS,
@@ -13,6 +13,8 @@ import { cookies, isBrowser, storage } from "./utils.ts";
 
 // 当前用户
 export const currentUser = signal<User | null>(null);
+export const accounts = signal<User[]>([]);
+export const activeAccountId = signal<string | null>(null);
 
 // Token
 export const authToken = signal<string | null>(null);
@@ -57,6 +59,7 @@ export function initAuthState(): void {
 export function setAuthState(user: User, token: string, remember = false): void {
   currentUser.value = user;
   authToken.value = token;
+  activeAccountId.value = user.id;
 
   if (isBrowser()) {
     const expires = remember ? AUTH_CONFIG.rememberExpiresDays : AUTH_CONFIG.tokenExpiresDays;
@@ -70,10 +73,34 @@ export function clearAuthState(): void {
   currentUser.value = null;
   authToken.value = null;
   authError.value = null;
+  activeAccountId.value = null;
+  accounts.value = [];
 
   if (isBrowser()) {
     cookies.remove(AUTH_CONFIG.tokenKey);
     storage.remove(AUTH_CONFIG.userKey);
+  }
+}
+
+// 切换账号
+export function switchAccount(accountId: string): void {
+  const next = accounts.value.find((a) => a.id === accountId);
+  if (!next) return;
+  activeAccountId.value = accountId;
+  currentUser.value = next;
+  // keep same token shape; demo uses user id as token
+  authToken.value = `token-${accountId}`;
+  if (isBrowser()) {
+    cookies.set(AUTH_CONFIG.tokenKey, authToken.value, { expires: AUTH_CONFIG.tokenExpiresDays });
+    storage.set(AUTH_CONFIG.userKey, next);
+  }
+}
+
+// 载入演示账号列表（可从接口替换）
+export function loadDemoAccounts(list: User[]): void {
+  accounts.value = list;
+  if (list.length && !activeAccountId.value) {
+    switchAccount(list[0].id);
   }
 }
 
@@ -83,7 +110,7 @@ export function clearAuthState(): void {
 export const themeMode = signal<ThemeMode>(THEME_CONFIG.defaultMode);
 
 // 皮肤
-export const themeSkin = signal(THEME_CONFIG.defaultSkin);
+export const themeSkin = signal<SkinType>(THEME_CONFIG.defaultSkin);
 
 // 实际主题（函数代替 computed）
 export function getActualTheme(): "light" | "dark" {
@@ -106,8 +133,12 @@ export function initThemeState(): void {
   if (!isBrowser()) return;
 
   const savedMode = storage.get<ThemeMode>(THEME_CONFIG.storageKey);
+  const savedSkin = storage.get<SkinType>(THEME_CONFIG.skinStorageKey);
   if (savedMode) {
     themeMode.value = savedMode;
+  }
+  if (savedSkin) {
+    themeSkin.value = savedSkin;
   }
 
   // 监听系统主题变化
@@ -129,6 +160,15 @@ export function setThemeMode(mode: ThemeMode): void {
   }
 }
 
+// 设置皮肤
+export function setThemeSkin(skin: SkinType): void {
+  themeSkin.value = skin;
+  if (isBrowser()) {
+    storage.set(THEME_CONFIG.skinStorageKey, skin);
+    applyTheme();
+  }
+}
+
 // 应用主题到 DOM
 function applyTheme(): void {
   if (!isBrowser()) return;
@@ -138,6 +178,13 @@ function applyTheme(): void {
     root.classList.add("dark");
   } else {
     root.classList.remove("dark");
+  }
+
+  // apply skin to data-skin for CSS variables in static/styles.css
+  if (themeSkin.value && themeSkin.value !== "default") {
+    root.dataset.skin = themeSkin.value;
+  } else {
+    delete root.dataset.skin;
   }
 }
 

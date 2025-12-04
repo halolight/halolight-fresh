@@ -286,6 +286,7 @@ export const DEFAULT_LAYOUTS = {
 // 主题配置
 export const THEME_CONFIG = {
   storageKey: "halolight_theme",
+  skinStorageKey: "halolight_skin",
   defaultMode: "system" as const,
   defaultSkin: "default" as const,
 };

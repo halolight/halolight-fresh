@@ -38,8 +38,13 @@ export default function App({ Component }: PageProps) {
                 try {
                   var theme = localStorage.getItem('halolight_theme');
                   if (theme) theme = JSON.parse(theme);
+                  var skin = localStorage.getItem('halolight_skin');
+                  if (skin) skin = JSON.parse(skin);
                   if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');
+                  }
+                  if (skin && skin !== 'default') {
+                    document.documentElement.dataset.skin = skin;
                   }
                 } catch (e) {}
               })();

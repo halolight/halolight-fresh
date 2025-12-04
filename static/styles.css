@@ -2859,3 +2859,88 @@ video {
     line-height: 1;
   }
 }
+
+/* Skin Presets - Ocean and Sunset */
+:root {
+  /* Ocean skin preset */
+  --skin-ocean-primary: oklch(0.62 0.18 240);
+  --skin-ocean-primary-fg: oklch(0.99 0.02 245);
+  --skin-ocean-accent: oklch(0.78 0.14 200);
+  --skin-ocean-accent-fg: oklch(0.22 0.03 230);
+  --skin-ocean-bg: oklch(0.98 0.01 210);
+  --skin-ocean-bg-dark: oklch(0.18 0.02 240);
+
+  /* Sunset skin preset */
+  --skin-sunset-primary: oklch(0.67 0.19 40);
+  --skin-sunset-primary-fg: oklch(0.99 0.01 95);
+  --skin-sunset-accent: oklch(0.71 0.23 20);
+  --skin-sunset-accent-fg: oklch(0.23 0.04 30);
+  --skin-sunset-bg: oklch(0.99 0.01 50);
+  --skin-sunset-bg-dark: oklch(0.18 0.03 35);
+}
+
+/* Ocean Skin */
+[data-skin="ocean"] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--skin-ocean-bg) / var(--tw-bg-opacity, 1));
+}
+
+[data-skin="ocean"] .bg-primary {
+  background-color: var(--skin-ocean-primary);
+  color: var(--skin-ocean-primary-fg);
+}
+
+[data-skin="ocean"] .text-primary {
+  color: var(--skin-ocean-primary);
+}
+
+[data-skin="ocean"] .bg-blue-600,
+[data-skin="ocean"] .bg-blue-500 {
+  background-color: var(--skin-ocean-primary);
+}
+
+[data-skin="ocean"] .text-blue-600,
+[data-skin="ocean"] .text-blue-500 {
+  color: var(--skin-ocean-primary);
+}
+
+.dark[data-skin="ocean"] {
+  background-color: var(--skin-ocean-bg-dark);
+}
+
+.dark[data-skin="ocean"] .bg-gray-800 {
+  background-color: rgb(30 50 80 / 0.9);
+}
+
+/* Sunset Skin */
+[data-skin="sunset"] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--skin-sunset-bg) / var(--tw-bg-opacity, 1));
+}
+
+[data-skin="sunset"] .bg-primary {
+  background-color: var(--skin-sunset-primary);
+  color: var(--skin-sunset-primary-fg);
+}
+
+[data-skin="sunset"] .text-primary {
+  color: var(--skin-sunset-primary);
+}
+
+[data-skin="sunset"] .bg-blue-600,
+[data-skin="sunset"] .bg-blue-500 {
+  background-color: var(--skin-sunset-primary);
+}
+
+[data-skin="sunset"] .text-blue-600,
+[data-skin="sunset"] .text-blue-500 {
+  color: var(--skin-sunset-primary);
+}
+
+.dark[data-skin="sunset"] {
+  background-color: var(--skin-sunset-bg-dark);
+}
+
+.dark[data-skin="sunset"] .bg-gray-800 {
+  background-color: rgb(50 30 25 / 0.9);
+}

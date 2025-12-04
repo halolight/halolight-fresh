@@ -15,7 +15,9 @@ import {
   currentUser,
   isDarkMode,
   setThemeMode,
+  setThemeSkin,
   themeMode,
+  themeSkin,
   uiSettings,
 } from "@/lib/stores.ts";
 import { Avatar } from "@/components/ui.tsx";
@@ -42,6 +44,11 @@ export default function Header({ title }: HeaderProps) {
     { mode: "dark", label: "深色", icon: Moon },
     { mode: "system", label: "跟随系统", icon: Monitor },
   ];
+  const skinOptions = [
+    { id: "default", label: "默认" },
+    { id: "ocean", label: "海洋" },
+    { id: "sunset", label: "日落" },
+  ] as const;
 
   const currentThemeIcon = themeOptions.find((t) => t.mode === themeMode.value)?.icon ?? Monitor;
 
@@ -92,7 +99,7 @@ export default function Header({ title }: HeaderProps) {
                 class="fixed inset-0 z-10"
                 onClick={() => (showThemeMenu.value = false)}
               />
-              <div class="absolute right-0 top-full z-20 mt-2 w-40 rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+              <div class="absolute right-0 top-full z-20 mt-2 w-48 rounded-lg border border-gray-200 bg-white py-2 shadow-lg dark:border-gray-700 dark:bg-gray-800 space-y-2">
                 {themeOptions.map(({ mode, label, icon: Icon }) => (
                   <button
                     key={mode}
@@ -113,6 +120,26 @@ export default function Header({ title }: HeaderProps) {
                     {label}
                   </button>
                 ))}
+                <div class="px-4 pt-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                  界面皮肤
+                </div>
+                <div class="grid grid-cols-3 gap-2 px-4 pb-2">
+                  {skinOptions.map((skin) => (
+                    <button
+                      key={skin.id}
+                      type="button"
+                      onClick={() => setThemeSkin(skin.id)}
+                      class={cn(
+                        "rounded-md border px-2 py-1 text-xs",
+                        themeSkin.value === skin.id
+                          ? "border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300"
+                          : "border-transparent text-gray-600 hover:border-gray-200 dark:text-gray-300 dark:hover:border-gray-700",
+                      )}
+                    >
+                      {skin.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </>
           )}

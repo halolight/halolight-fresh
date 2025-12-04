@@ -87,6 +87,8 @@ export type ThemeMode = "light" | "dark" | "system";
 // 皮肤类型
 export type SkinType =
   | "default"
+  | "ocean"
+  | "sunset"
   | "zinc"
   | "slate"
   | "stone"
