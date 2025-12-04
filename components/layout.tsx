@@ -23,7 +23,7 @@ export function Footer({ class: className }: FooterProps) {
             rel="noopener noreferrer"
             class="hover:text-gray-900 dark:hover:text-gray-200"
           >
-            文档
+            在线文档
           </a>
           <a
             href="/terms"
