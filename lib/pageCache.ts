@@ -32,26 +32,26 @@ export function clearAllPageState() {
 
 // hooks
 export function useScrollRestore(path: string) {
-  if (typeof window === "undefined") return;
+  if (typeof globalThis === "undefined" || typeof globalThis.scrollY === "undefined") return;
   let restoring = false;
   const onScroll = () => {
-    if (!restoring) setPageState(path, { scrollY: window.scrollY });
+    if (!restoring) setPageState(path, { scrollY: globalThis.scrollY });
   };
   const throttled = () => {
-    window.clearTimeout((throttled as any).t);
-    (throttled as any).t = window.setTimeout(onScroll, 80);
+    clearTimeout((throttled as any).t);
+    (throttled as any).t = setTimeout(onScroll, 80);
   };
-  window.addEventListener("scroll", throttled);
+  globalThis.addEventListener("scroll", throttled);
   const state = getPageState(path);
   if (state?.scrollY) {
     restoring = true;
     requestAnimationFrame(() => {
-      window.scrollTo(0, state.scrollY);
+      globalThis.scrollTo(0, state.scrollY);
       setTimeout(() => (restoring = false), 80);
     });
   }
   return () => {
-    window.removeEventListener("scroll", throttled);
+    globalThis.removeEventListener("scroll", throttled);
   };
 }
 
