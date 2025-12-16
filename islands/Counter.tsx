@@ -10,6 +10,7 @@ export default function Counter({ start }: CounterProps) {
   return (
     <div class="flex items-center justify-center gap-4">
       <button
+        type="button"
         class="w-10 h-10 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full text-xl font-bold transition"
         onClick={() => count.value--}
       >
@@ -19,6 +20,7 @@ export default function Counter({ start }: CounterProps) {
         {count}
       </span>
       <button
+        type="button"
         class="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xl font-bold transition"
         onClick={() => count.value++}
       >

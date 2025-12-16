@@ -27,7 +27,41 @@ deno task start     # 启动生产服务器
 deno task check     # 类型检查
 deno task fmt       # 格式化代码
 deno task lint      # 代码检查
+deno task test      # 运行测试
+deno task test:coverage  # 测试覆盖率
+deno task ci        # 运行所有检查（格式、lint、类型、测试）
 ```
+
+## 测试
+
+测试位于 `tests/` 目录：
+
+```
+tests/
+├── setup.ts              # 测试环境设置（mock localStorage/sessionStorage/matchMedia）
+└── lib/
+    ├── utils.test.ts     # 工具函数测试（cn, formatDate, formatNumber 等）
+    ├── config.test.ts    # 配置测试（APP_CONFIG, AUTH_CONFIG, hasPermission）
+    └── stores.test.ts    # 状态管理测试（认证、主题、UI 设置、Toast）
+```
+
+运行测试：
+
+```bash
+deno task test           # 运行所有测试
+deno task test:watch     # 监视模式
+deno task test:coverage  # 生成覆盖率报告（输出到 coverage/lcov.info）
+```
+
+## CI/CD
+
+GitHub Actions 工作流位于 `.github/workflows/ci.yml`，包含：
+
+- **lint**: 格式检查、代码检查、类型检查
+- **test**: 运行测试并上传覆盖率到 Codecov
+- **build**: 生产构建验证
+- **security**: Deno 安全审计
+- **dependency-review**: PR 依赖审查
 
 ## 架构
 
@@ -71,7 +105,10 @@ export default function Counter() {
 │   └── api/          # API 路由
 ├── islands/          # 交互组件（客户端水合）
 ├── components/       # 纯服务端组件
-└── static/           # 静态资源
+├── lib/              # 工具库
+├── tests/            # 单元测试
+├── static/           # 静态资源
+└── .github/          # CI/CD 配置
 ```
 
 ### Fresh 特性
@@ -117,11 +154,11 @@ Fresh 使用 Deno 原生环境变量：
 const apiUrl = Deno.env.get("API_URL") ?? "/api";
 ```
 
-| 变量名 | 说明 | 默认值 |
-|--------|------|--------|
-| `API_URL` | API 基础 URL | `/api` |
-| `MOCK_ENABLED` | 启用 Mock 数据 | `true` |
-| `APP_TITLE` | 应用标题 | `Admin Pro` |
+| 变量名         | 说明           | 默认值      |
+| -------------- | -------------- | ----------- |
+| `API_URL`      | API 基础 URL   | `/api`      |
+| `MOCK_ENABLED` | 启用 Mock 数据 | `true`      |
+| `APP_TITLE`    | 应用标题       | `Admin Pro` |
 
 ## 新增功能开发指南
 
